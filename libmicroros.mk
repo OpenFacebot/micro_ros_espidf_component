@@ -40,7 +40,8 @@ $(EXTENSIONS_DIR)/micro_ros_dev/install:
 	git clone -b rolling https://github.com/ament/ament_index src/ament_index; \
 	touch src/ament_cmake_ros/rmw_test_fixture_implementation/COLCON_IGNORE; \
 	touch src/ament_cmake_ros/rmw_test_fixture/COLCON_IGNORE; \
-	colcon build --cmake-args -DBUILD_TESTING=OFF -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=gcc;
+	PATH="/usr/bin:/bin:$(subst /opt/ros/$(ROS_DISTRO)/bin,,$(PATH))" \
+		colcon build --cmake-args -DBUILD_TESTING=OFF -DCMAKE_C_COMPILER=/usr/bin/gcc -DCMAKE_CXX_COMPILER=/usr/bin/g++;
 
 # ros2/rosidl needs to be pinned to an older version as ros2/rosidl#942 added rosidl_buffer as
 # a dependency for various rosidl packages and we can't build it currently.
@@ -95,7 +96,7 @@ $(EXTENSIONS_DIR)/micro_ros_src/src:
 $(EXTENSIONS_DIR)/micro_ros_src/install: $(EXTENSIONS_DIR)/esp32_toolchain.cmake $(EXTENSIONS_DIR)/micro_ros_dev/install $(EXTENSIONS_DIR)/micro_ros_src/src
 	cd $(UROS_DIR); \
 	unset AMENT_PREFIX_PATH; \
-	PATH="$(subst /opt/ros/$(ROS_DISTRO)/bin,,$(PATH))"; \
+	PATH="/usr/bin:/bin:$(subst /opt/ros/$(ROS_DISTRO)/bin,,$(PATH))"; \
 	. ../micro_ros_dev/install/local_setup.sh; \
 	colcon build \
 		--merge-install \
